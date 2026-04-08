@@ -22,6 +22,42 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## Smarter Scheduling
+
+The scheduler goes beyond a basic task list with four algorithmic improvements:
+
+### Sort by time
+`Scheduler.sort_by_time()` orders all tasks chronologically using their `start_time` field (stored as `"HH:MM"`).
+Zero-padded strings sort correctly with a plain lambda key — no date parsing needed.
+Tasks without a `start_time` fall to the end via a `"99:99"` sentinel value.
+
+### Filter by pet or status
+`Scheduler.filter_tasks(completed, pet_name)` lets you slice the task list in two ways:
+- `completed=False` — pending tasks only
+- `completed=True` — completed tasks only
+- `pet_name="Max"` — tasks for a specific pet (case-insensitive)
+
+Both filters can be combined: `filter_tasks(completed=False, pet_name="Max")`.
+
+### Recurring tasks
+`Task.mark_completed()` now returns a **new Task instance** for the next occurrence instead of just setting a flag.
+It uses Python's `timedelta` to calculate the next due date:
+- `"daily"` frequency → `today + timedelta(days=1)`
+- `"weekly"` frequency → `today + timedelta(weeks=1)`
+- `"as-needed"` and other frequencies → returns `None` (no auto-recurrence)
+
+### Conflict detection
+`Scheduler.detect_conflicts()` checks every pair of timed tasks for overlapping windows using the formula:
+
+```
+conflict if: a_start < b_end  AND  b_start < a_end
+```
+
+It returns plain warning strings and never crashes the program.
+Tasks without a `start_time` are safely skipped.
+
+---
+
 ## Getting started
 
 ### Setup
