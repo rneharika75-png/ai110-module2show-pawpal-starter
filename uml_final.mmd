@@ -1,0 +1,89 @@
+classDiagram
+    class Priority {
+        <<enumeration>>
+        HIGH = 3
+        MEDIUM = 2
+        LOW = 1
+    }
+
+    class Owner {
+        +str name
+        +float available_time
+        +List~Pet~ pets
+        +List~str~ preferences
+        +List~str~ constraints
+        +set_available_time(hours)
+        +add_preference(preference)
+        +get_constraints() List~str~
+        +add_pet(pet)
+        +get_all_tasks() List~Task~
+    }
+
+    class Pet {
+        +str name
+        +str type
+        +int age
+        +List~str~ special_needs
+        +List~Task~ tasks
+        +get_info() dict
+        +add_special_need(need)
+        +add_task(task)
+    }
+
+    class Task {
+        +str name
+        +int duration
+        +Priority priority
+        +str frequency
+        +str description
+        +str preferred_time
+        +str owner_id
+        +str pet_id
+        +str start_time
+        +date due_date
+        +bool completed
+        +datetime last_completed
+        +get_duration() int
+        +get_priority() Priority
+        +set_priority(level)
+        +mark_completed() Task
+        +is_due_today() bool
+    }
+
+    class DailySchedule {
+        +str owner_name
+        +str pet_name
+        +List scheduled_tasks
+        +float total_time_used
+        +str reasoning
+        +datetime timestamp
+        +List~Task~ unscheduled_tasks
+        +get_tasks_by_time() List
+        +get_explanation() str
+        +display_plan() str
+    }
+
+    class Scheduler {
+        +Owner owner
+        +Pet pet
+        +List~Task~ tasks_list
+        +DailySchedule daily_plan
+        +add_task(task)
+        +load_all_tasks() List~Task~
+        +evaluate_constraints() bool
+        +validate_feasibility() Tuple
+        +detect_conflicts() List~str~
+        +prioritize_tasks() List~Task~
+        +sort_by_time() List~Task~
+        +filter_tasks(completed, pet_name)
+        +generate_schedule() DailySchedule
+        +get_plan() DailySchedule
+    }
+
+    Owner "1" --> "0..*" Pet : owns
+    Pet "1" --> "0..*" Task : has
+    Task --> Priority : uses
+    Scheduler --> Owner : schedules for
+    Scheduler --> "0..1" Pet : optional focus
+    Scheduler --> DailySchedule : generates
+    DailySchedule "1" --> "0..*" Task : contains
