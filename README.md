@@ -1,6 +1,47 @@
 # PawPal+ (Module 2 Project)
 
-You are building **PawPal+**, a Streamlit app that helps a pet owner plan care tasks for their pet.
+> A smart pet care scheduling assistant built with Python and Streamlit.
+
+## Features
+
+### Owner & Pet Management
+- Register an owner with a name and daily available time (in hours)
+- Add one or more pets with name, species, and age
+- Each pet maintains its own independent task list
+
+### Task Scheduling
+- Add care tasks with name, duration, priority (High / Medium / Low), frequency, and optional start time
+- **Priority-based scheduling** — HIGH priority tasks are always scheduled before MEDIUM or LOW, ensuring critical care never gets bumped
+- **Greedy time-fitting** — the scheduler fills the day using available hours; tasks that don't fit are listed separately with a tip on how to resolve them
+- **Feasibility check** — before generating a plan, the app tells you whether your tasks fit within your available time
+
+### Sorting by Time
+- All queued tasks are displayed sorted chronologically by `start_time` (HH:MM)
+- Uses a zero-padded string comparison — no date parsing overhead
+- Tasks without a start time appear at the end of the list
+
+### Conflict Warnings
+- The scheduler checks every pair of timed tasks for overlapping windows before displaying the plan
+- Uses the interval overlap formula: `a_start < b_end AND b_start < a_end`
+- Warnings appear prominently above the schedule so you can fix conflicts before acting on the plan
+- Tasks without a start time are safely skipped — no false positives
+
+### Daily Recurrence
+- Marking a task complete automatically calculates the next due date:
+  - `daily` tasks recur tomorrow (`today + 1 day`)
+  - `weekly` tasks recur in seven days (`today + 7 days`)
+  - `as-needed` tasks are retired once completed (no auto-recurrence)
+- The "Recurring task schedule" expander in the UI shows the next due date for every recurring task in today's plan
+
+### Filtering
+- Filter the task list by completion status (pending / completed) directly in the UI
+- `Scheduler.filter_tasks()` also supports filtering by pet name — combinable with status
+
+### System Architecture
+See [`uml_final.png`](uml_final.png) for the full class diagram.
+Five classes work together: `Owner` → `Pet` → `Task` (with `Priority` enum), coordinated by `Scheduler` which produces a `DailySchedule`.
+
+---
 
 ## Scenario
 
