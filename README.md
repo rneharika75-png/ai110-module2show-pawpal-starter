@@ -37,6 +37,14 @@
 - Filter the task list by completion status (pending / completed) directly in the UI
 - `Scheduler.filter_tasks()` also supports filtering by pet name — combinable with status
 
+## 📸 Demo
+
+![PawPal+ Streamlit App](demo_screenshot.png)
+
+*The app guides the owner through four steps: create an owner, add a pet, queue tasks with optional start times, then generate a conflict-checked priority schedule.*
+
+---
+
 ### System Architecture
 See [`uml_final.png`](uml_final.png) for the full class diagram.
 Five classes work together: `Owner` → `Pet` → `Task` (with `Priority` enum), coordinated by `Scheduler` which produces a `DailySchedule`.
